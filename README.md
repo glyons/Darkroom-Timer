@@ -13,6 +13,6 @@ The goal of the Darkroom timer build is to make it without much fuss, it's inexp
   - Setting are stored in the device.
   - Sound buzzer for each second and strip step.
 
-[TODO] Strip tests in full, half and third stops
-[TODO] Presets
-[TODO] Scale calculator
+  - [TODO] Strip tests in full, half and third stops
+  - [TODO] Presets
+  - [TODO] Scale calculator
