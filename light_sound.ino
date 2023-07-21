@@ -50,7 +50,7 @@ void brightnessInit()
 void brightnessSelector()//uiMode 6, long hold focus button
 {
   if (tmButtons==BRIGHTNESS_BUTTON) plusminus++;
-  brightnessValue =  plusminus % 8;//read 2 revolving encoder values
+  brightnessValue =  plusminus % 8;
   if(brightnessValue != displayRefreshTracker) //check for display update
   { 
     tm.brightness(brightnessValue); //set displays brightness function
