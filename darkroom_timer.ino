@@ -1,6 +1,6 @@
-// Based on Monkito darkroom f-stop timer software written and © by Elia Cottier//
-// Rewritten for the TM1638 without rotary encoder.
 
+// Rewritten for the TM1638 without rotary encoder by Gavin Lyons.
+// Based on Monkito darkroom f-stop timer software written and © by Elia Cottier//
 #include <TM1638plus.h>
 #include <Math.h> //Math library for "round" function
 #include <EEPROM.h> //EEPROM library to save set-up values
@@ -33,8 +33,8 @@ bool focusLight=false;
 //EPROM default valuse storage
   const byte eeBrightness = 0; //eeprom brightness value address
   const byte eeIncrement = 1; //eeprom f-stop selector increment value address
-  const byte eeStripTestMode = 2; //eeprom Strip test mode half/full/thirds/off
   const byte eeLastFStopValue = 3; //eeprom step program input mode value address
+  const byte eeStepIdx = 6; //eeprom step program input mode value address
 
   byte brightnessValue; 
   uint8_t tmButtons;
@@ -51,14 +51,15 @@ bool focusLight=false;
   int readingDelay = 1000;//1 sec. human reading delay
   char tempString[9]; //TM1638 Display digits with two decimals.
 
-  volatile unsigned int encoderVal; //encoder value used by all encoder reading functions
-  int increment; //encoder increment step value used by all encoder reading functions
+  volatile unsigned int buttonPlueMinusVal; //+/- exposure functions
+  int increment; 
   int plusminus; // plusminus button value
   bool loadDefault;
   
 //Timer
-  byte timerIncrement []= {1,2,5,10,20,25,33,50,100}; //Preset f-stop fractions increments in hundreds
-  byte timerIncrementSize = 9;
+  byte timerIncrement []= {8,16,33,50}; //Preset f-stop fractions increments in hundreds
+  char* timerIncrementText []= {"1-12","1-6 ","1-3 ","1-2 "}; //Preset f-stop fractions increments in hundreds
+  byte timerIncrementSize = 4;
   byte timerInc; //fstop increment value
 
   unsigned int FStop; //F-stop value
@@ -70,11 +71,8 @@ bool focusLight=false;
   unsigned long startMillis;//start time
   unsigned long elapsedMillis;//elapsed time
   unsigned long millisInterval = 100;//10 Hz timer display update frequency
-  unsigned long time_passed;//elapsed button time
-  
-///Test strips
-  int stripID; //strip ID number
-  byte stripTestMode; 
+  unsigned long time_passed;//elapsed button time 
+  int stepIdx;
 
 //Constructor object (GPIO STB , GPIO CLOCK , GPIO DIO, use high freq MCU)
 TM1638plus tm(STROBE_TM, CLOCK_TM , DIO_TM, high_freq);
@@ -83,15 +81,16 @@ void setup()
   Serialinit();
   tm.displayBegin();
 //EEPROM
-  timerInc = EEPROM.read(eeIncrement);//f-stop encoder increment
-  stripTestMode = EEPROM.read(eeStripTestMode);
+  timerInc = EEPROM.read(eeIncrement);//f-stop buttonPlueMinus increment
+  stepIdx = EEPROM.read(eeStepIdx);
+  tm.setLED(stepIdx, 1);
   brightnessValue = EEPROM.read(eeBrightness);
 //Values
   FStop = 0;
   deltaFStop = 0;
   timeMillis = 0;
   elapsedMillis = 0;
-  encoderVal = 0;
+  buttonPlueMinusVal = 0;
   plusminus=0;
   increment = 0;
   displayRefreshTracker = 10000; //value for displays refresh
@@ -122,7 +121,7 @@ byte uiModes() //timer mode and related functions
     switch(tmButtons)
     {
       case 0x16:
-        uiMode = 1; //Clear encoder before timer mode (uiMode 0)
+        uiMode = 1; //Clear buttonPlueMinus before timer mode (uiMode 0)
       break;
       case 0x02:
         uiMode = 4; //Focus light on/off
@@ -152,13 +151,13 @@ byte uiModes() //timer mode and related functions
     if(millis()-time_passed > 5000) {
       time_passed = millis(); 
       uiMode=0;
-   }
+    }
   }
  
   switch (uiMode)
     {
     case 1: //
-      encoderVal = 0;
+      buttonPlueMinusVal = 0;
       uiMode = 0; //default mode
     break;
     case 2:
@@ -175,9 +174,6 @@ byte uiModes() //timer mode and related functions
     break;
     case 14:
       fstopIncrementSetUp();
-    break;
-    case 16:
-      stripTestModeSetUp();
     break;
     case 18:
       scaleCalculator();
