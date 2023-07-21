@@ -5,7 +5,8 @@ void delayTimer(int delayTime) //replace "delay()" function
   while (millis() < m + delayTime) {}; //time to allow mask manipulation between strip zones
 }
 void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displayed with 3rd digit decimal
-{  
+{ 
+  tm.brightness(0);
   elapsedMillis = 0;//reset elapsed time
   unsigned long currentMillis = 0;//start timestamp
   resumeTime = 0;//clear resume time
@@ -28,11 +29,11 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
       resumeTime = x;//set resume time
       x=0;//end timer loop
     }
-    if (tmButtons==1) //Abort countdown
+    if (tmButtons==1) //Cancel countdown
     {
        resumeTime = 0;//time reset
        x=0;//end of timer loop
-       tm.displayText(" Abort  ");//abort message
+       tm.displayText(" CANCEL  ");
        delayTimer(readingDelay);//reading delay
        uiMode = 0;//back to fstop selector mode without reset
     }
@@ -44,4 +45,5 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
   } //Time elapsed, end of loop
   digitalWrite(RELAY_PIN, LOW);//enlarger light OFF
   tm.setLED(START_LED_PIN, 0);//Start button led OFF 
+  tm.brightness(brightnessValue);
 }
