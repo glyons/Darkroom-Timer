@@ -9,50 +9,54 @@ void fstopIncrementSetUp() //F-stop increment selector, long hold timer button
     if (tmButtons==INCREMENT_BUTTON) plusminus++;
     byte i = plusminus % timerIncrementSize; //Limit values to those available in the presets array
     timerInc = timerIncrement[i]; //increment selection
-    
+    stepIdx = i;
+    char* timerIncText = timerIncrementText[i]; //increment selection
     if (i != displayRefreshTracker) {
-      sprintf(tempString, "Incr %03d", timerInc);//set right align 0.00 format 
+      clearStripLEDs();
+      tm.setLED(i+1, 1);
+      sprintf(tempString, "StEP %03d", timerInc);//set right align 0.00 format 
       displayText(tempString,5,99);
       EEPROM.write(eeIncrement, timerInc);
+      EEPROM.write(eeStepIdx, i+1);
      }
     displayRefreshTracker = i; //display trigger update   
     delay(intervalButton); 
 }
 void fstopSelector()//f-stop and time setting function, single click button 1 
 {
-  int steps; //encoder steps counter
+  int steps; //steps counter
   int tensDisplay; //time value for display
   increment = timerInc; //pre-set increment value
   switch(tmButtons)
     {
       case PLUS_BUTTON:
-        encoderVal += increment;
+        buttonPlueMinusVal += increment;
       break;
       case MINUS_BUTTON:
-        encoderVal-= increment;
+        buttonPlueMinusVal-= increment;
       break;
     }
-  if (encoderVal <= 0) encoderVal = 0;
-  if (encoderVal > 1000) encoderVal = 1000;//f-stop upper limit of 10.00 corresponding to ca. 17.07min
+  if (buttonPlueMinusVal <= 0) buttonPlueMinusVal = 0;
+  if (buttonPlueMinusVal > 1000) buttonPlueMinusVal = 1000;//f-stop upper limit of 10.00 corresponding to ca. 17.07min
   
   if (loadDefault)
   {
     FStop = (int)EEPROM.read(eeLastFStopValue) | ((int)EEPROM.read(eeLastFStopValue + 1) << 8);      
     Serial.println(FStop);
     loadDefault=false;
-    encoderVal=FStop;
+    buttonPlueMinusVal=FStop;
   }
   else
   {
-    FStop = encoderVal % 1001;//Fstop value
+    FStop = buttonPlueMinusVal % 1001;//Fstop value
   }
   if (increment == 33){ // 1/3rd correction to avoid bad rounding of 3 * 1/3rd = 0.99
-    steps = encoderVal / increment;//count how many steps of 33
-    int multipliedEncoderVal = steps * increment; //F-stop value before correction
-    if (steps % 3 == 0 && steps > 0) FStop = multipliedEncoderVal + (steps / 3);//full f-stops correction
-    if (steps % 3 != 0 && steps <= 29) FStop = multipliedEncoderVal + ((steps - steps % 3 ) / 3); //fractions f-stops correction, up to 9.90
-    if (steps > 29) encoderVal = 1000; //F-stop max 10.00
-    if (steps <= 0) encoderVal = 0; //F-stop  min 0.00x
+    steps = buttonPlueMinusVal / increment;//count how many steps of 33
+    int multipliedVal = steps * increment; //F-stop value before correction
+    if (steps % 3 == 0 && steps > 0) FStop = multipliedVal + (steps / 3);//full f-stops correction
+    if (steps % 3 != 0 && steps <= 29) FStop = multipliedVal + ((steps - steps % 3 ) / 3); //fractions f-stops correction, up to 9.90
+    if (steps > 29) buttonPlueMinusVal = 1000; //F-stop max 10.00
+    if (steps <= 0) buttonPlueMinusVal = 0; //F-stop  min 0.00x
   }
   tensSeconds = fstop2TensSeconds(FStop + deltaFStop); //final tens calculation including scaling factor and lighting delay
   tensDisplay = tensSeconds; //time value for display
@@ -63,14 +67,14 @@ void fstopSelector()//f-stop and time setting function, single click button 1
     timerCountdown(tensSeconds);//timer with f-stop converted in time + enlargment correction time
     displayRefreshTracker += 1;
   }
-  if (tmButtons == 1 ) //abort after stop
+  if (tmButtons == 1 ) //cancel after stop
   {
-    tm.displayText(" Abort  ");//abort message
+    tm.displayText(" CANCEL  ");//cancel message
     delayTimer(readingDelay);//reading delay
-    resumeTime = 0; //aborted, no time to resume
+    resumeTime = 0; //canceled, no time to resume
     displayRefreshTracker += 1;
   }
-  if (encoderVal != displayRefreshTracker) //check for display refresh
+  if (buttonPlueMinusVal != displayRefreshTracker) //check for display refresh
   {
     if (deltaFStop == 0) //condition if no scale correction
     { 
@@ -102,5 +106,5 @@ void fstopSelector()//f-stop and time setting function, single click button 1
     EEPROM.write(eeLastFStopValue, FStop & 0xFF); 
     EEPROM.write(eeLastFStopValue + 1, (FStop >> 8) & 0xFF); // 16 bit
   }
-  displayRefreshTracker = encoderVal; //value for display update check
+  displayRefreshTracker = buttonPlueMinusVal; //value for display update check
 }
