@@ -1,7 +1,7 @@
 # Darkroom-Timer
 The goal of the Darkroom timer build is to make it without much fuss, it's inexpensive and accessible to anyone with basic knowledge.
 
-
+[Strip Test Demo.gif](/Strip%20Test%20Demo.gif?raw=true)
 
 Darkroom timer are simple but don't work the way they should. At least time based ones they are linear. Photography isn't linear. F-Stops are logarithmic, i.e twice the light or half the light through the lens aperture. The enlarger is essential a camera in reserve. This easy to build darkroom timer will not only show exposure in time but it also display in F-Stops.
 
