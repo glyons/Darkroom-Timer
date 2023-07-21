@@ -1,8 +1,6 @@
 # Darkroom-Timer
 The goal of the Darkroom timer build is to make it without much fuss, it's inexpensive and accessible to anyone with basic knowledge.
 
-![Strip Test Demo.gif](Strip%20Test%20Demo.gif?raw=true&sanitize=true "Test Strip Demo")
-
 Darkroom timer are simple but don't work the way they should. At least time based ones they are linear. Photography isn't linear. F-Stops are logarithmic, i.e twice the light or half the light through the lens aperture. The enlarger is essential a camera in reserve. This easy to build darkroom timer will not only show exposure in time but it also display in F-Stops.
 
 F- stop printing was originally made popular by the award winning printer Gene Nocon in 1987.  If you want the full explanation, you can find it in his book Photographic Printing (now out of print, but available on the second hand market)
@@ -20,3 +18,5 @@ F- stop printing was originally made popular by the award winning printer Gene N
 - The last time/F-Stop setting is automatically restored on power up.
 - Settings are stored in the device.
 - Sound buzzer for each second and strip step
+
+![Strip Test Demo.gif](Strip%20Test%20Demo.gif?raw=true&sanitize=true "Test Strip Demo")
