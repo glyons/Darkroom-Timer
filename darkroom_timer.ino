@@ -12,7 +12,8 @@
 #define  DIO_TM 11 //ESPino 12 //Arduino 11
 bool high_freq = false; //default false Arduino Uno,, If using a high freq CPU > ~100 MHZ set to true, i.e ESP32
 bool focusLight=false;
-
+bool stripTestMode=false;
+bool baseExposure=false;
 #define TONE_PIN 16 //buzzer pin
 #define RELAY_PIN 5 //relay board pin
 #define FOCUS_LED_PIN 0 //Focus button led pin
