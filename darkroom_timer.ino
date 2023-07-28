@@ -7,9 +7,18 @@
 
 // GPIO I/O pins on the Arduino or ESP 12 Relay
 //pick on any I/O you want.
-#define  STROBE_TM 10 //ESPino 14 //Arduino 10
-#define  CLOCK_TM 9 //ESPino 13 //Arduino 9
-#define  DIO_TM 11 //ESPino 12 //Arduino 11
+#if defined(__AVR__)
+// Arduino
+  #define  STROBE_TM 10
+  #define  CLOCK_TM 9
+  #define  DIO_TM 11
+#elif defined(ESP8266)
+// ESP8266 specific code here
+  #define  STROBE_TM 14
+  #define  CLOCK_TM 13
+  #define  DIO_TM 12 
+#endif
+
 bool high_freq = false; //default false Arduino Uno,, If using a high freq CPU > ~100 MHZ set to true, i.e ESP32
 bool focusLight=false;
 bool stripTestMode=false;
