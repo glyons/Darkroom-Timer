@@ -36,11 +36,21 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
        tm.displayText(" CANCEL  ");
        delayTimer(readingDelay);//reading delay
        uiMode = 0;//back to fstop selector mode without reset
+       stripTestMode=false;
     }
     timeCounter--; //set elapsed tens
-    if (FStop < 1000) sprintf(tempString, " %03d%4d", FStop, timeCounter ); //fstop format rule 
-    if (FStop >= 1000) sprintf(tempString, "%4d%4d", FStop,  timeCounter); //fstop format rule
-    displayText(tempString,1,6);
+    if (baseExposure)
+    {
+      sprintf(tempString, "BASE%4d",timeCounter ); //fstop format rule 
+      displayText(tempString,99,6);
+    }
+    else
+    {
+      if (FStop < 1000) sprintf(tempString, " %03d%4d", FStop, timeCounter ); //fstop format rule 
+      if (FStop >= 1000) sprintf(tempString, "%4d%4d", FStop,  timeCounter); //fstop format rule
+      displayText(tempString,1,6);
+    }
+  
     yield(); // ESP32 
   } //Time elapsed, end of loop
   digitalWrite(RELAY_PIN, LOW);//enlarger light OFF
