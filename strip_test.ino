@@ -87,11 +87,13 @@ void stripTest()//select strip number for stripBuilder(), simple click button 2
     {
        sprintf(tempString,"BASE%4d",values[n]);
        displayText(tempString,99,6);
+       baseExposure=true;
     }
     else
     {
        sprintf(tempString,  " %03d%4d",fstops[n], values[n]);
        displayText(tempString,1,6);
+       baseExposure=false;
     }
     
     if (!focusLight)
