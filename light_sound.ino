@@ -5,13 +5,15 @@ void focusOnOff() //Focus light on and off
   if (focusLight)
   {
    tm.setLED(FOCUS_LED_PIN,0);
+   focusLight=false;
   }
   else
   {
    tm.setLED(FOCUS_LED_PIN,1);
+   focusLight=true;
   }
    delay(2*debounce); 
-  focusLight=!focusLight;
+  
   
   uiMode = 0; //back to timer mode
 }
@@ -21,6 +23,7 @@ void resetFocus()
   {
     digitalWrite(RELAY_PIN, LOW);
     tm.setLED(FOCUS_LED_PIN, 0);
+    focusLight=false;
   }
 }
 void bipLow()//low tone bip
