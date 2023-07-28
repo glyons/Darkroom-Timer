@@ -23,7 +23,7 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
 
     if (x % 10 == 0) bipHigh(); //tone every second
     tmButtons = buttonsRead(); //check buttons events
-    
+
     if(tmButtons==128 ) //stop to resume
     {
       resumeTime = x;//set resume time
@@ -38,10 +38,10 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
        uiMode = 0;//back to fstop selector mode without reset
     }
     timeCounter--; //set elapsed tens
-
     if (FStop < 1000) sprintf(tempString, " %03d%4d", FStop, timeCounter ); //fstop format rule 
     if (FStop >= 1000) sprintf(tempString, "%4d%4d", FStop,  timeCounter); //fstop format rule
     displayText(tempString,1,6);
+    yield(); // ESP32 
   } //Time elapsed, end of loop
   digitalWrite(RELAY_PIN, LOW);//enlarger light OFF
   tm.setLED(START_LED_PIN, 0);//Start button led OFF 
