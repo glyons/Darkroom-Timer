@@ -5,16 +5,16 @@
 #include <Math.h> //Math library for "round" function
 #include <EEPROM.h> //EEPROM library to save set-up values
 
-// GPIO I/O pins on the Arduino connected to strobe, clock, data,
+// GPIO I/O pins on the Arduino or ESP 12 Relay
 //pick on any I/O you want.
-#define  STROBE_TM 10
-#define  CLOCK_TM 9
-#define  DIO_TM 11
-bool high_freq = false; //default false,, If using a high freq CPU > ~100 MHZ set to true.
+#define  STROBE_TM 10 //ESPino 14 //Arduino 10
+#define  CLOCK_TM 9 //ESPino 13 //Arduino 9
+#define  DIO_TM 11 //ESPino 12 //Arduino 11
+bool high_freq = false; //default false Arduino Uno,, If using a high freq CPU > ~100 MHZ set to true, i.e ESP32
 bool focusLight=false;
 
-#define TONE_PIN 6 //buzzer pin
-#define RELAY_PIN 7 //relay board pin
+#define TONE_PIN 16 //buzzer pin
+#define RELAY_PIN 5 //relay board pin
 #define FOCUS_LED_PIN 0 //Focus button led pin
 #define START_LED_PIN 7 //Start button led pin
 #define CORR_LED_PIN 6 //Start button led pin
@@ -57,9 +57,9 @@ bool focusLight=false;
   bool loadDefault;
   
 //Timer
-  byte timerIncrement []= {8,16,33,50}; //Preset f-stop fractions increments in hundreds
+  byte timerIncrement []= {8,16,33,50,100}; //Preset f-stop fractions increments in hundreds
   char* timerIncrementText []= {"1-12","1-6 ","1-3 ","1-2 "}; //Preset f-stop fractions increments in hundreds
-  byte timerIncrementSize = 4;
+  byte timerIncrementSize = 5;
   byte timerInc; //fstop increment value
 
   unsigned int FStop; //F-stop value
@@ -83,6 +83,7 @@ void setup()
 //EEPROM
   timerInc = EEPROM.read(eeIncrement);//f-stop buttonPlueMinus increment
   stepIdx = EEPROM.read(eeStepIdx);
+  if (stepIdx==0) stepIdx++;
   tm.setLED(stepIdx, 1);
   brightnessValue = EEPROM.read(eeBrightness);
 //Values
@@ -99,7 +100,6 @@ void setup()
  //Pin modes
   pinMode(TONE_PIN, OUTPUT);
   pinMode(RELAY_PIN, OUTPUT); 
-
 //Display
   brightnessInit();
   bipHigh();//set-up end signal
@@ -205,6 +205,7 @@ void clearStripLEDs() {
     tm.setLED(LEDposition, 0);
   }
 }
+
 // Read and debounce the buttons from TM1638  every interval 
 uint8_t buttonsRead(void)
 {
