@@ -61,14 +61,13 @@ bool baseExposure=false;
   int readingDelay = 1000;//1 sec. human reading delay
   char tempString[9]; //TM1638 Display digits with two decimals.
 
-  volatile unsigned int buttonPlueMinusVal; //+/- exposure functions
+  volatile unsigned int buttonPlusMinusValue; //+/- exposure functions
   int increment; 
   int plusminus; // plusminus button value
   bool loadDefault;
   
 //Timer
   byte timerIncrement []= {8,16,33,50,100}; //Preset f-stop fractions increments in hundreds
-  char* timerIncrementText []= {"1-12","1-6 ","1-3 ","1-2 "}; //Preset f-stop fractions increments in hundreds
   byte timerIncrementSize = 5;
   byte timerInc; //fstop increment value
 
@@ -101,7 +100,7 @@ void setup()
   deltaFStop = 0;
   timeMillis = 0;
   elapsedMillis = 0;
-  buttonPlueMinusVal = 0;
+  buttonPlusMinusValue = 0;
   plusminus=0;
   increment = 0;
   displayRefreshTracker = 10000; //value for displays refresh
@@ -120,7 +119,7 @@ void loop()
   uiModes();
 }
 
-byte uiModes() //timer mode and related functions
+void uiModes() //timer mode and related functions
 {
   tmButtons = buttonsRead(); //check buttons events
   if (tmButtons != 0) displayRefreshTracker = 10000;//Value to get any display update
@@ -167,7 +166,7 @@ byte uiModes() //timer mode and related functions
   switch (uiMode)
     {
     case 1: //
-      buttonPlueMinusVal = 0;
+      buttonPlusMinusValue = 0;
       uiMode = 0; //default mode
     break;
     case 2:
