@@ -10,7 +10,6 @@ void fstopIncrementSetUp() //F-stop increment selector, long hold timer button
     byte i = plusminus % timerIncrementSize; //Limit values to those available in the presets array
     timerInc = timerIncrement[i]; //increment selection
     stepIdx = i;
-    char* timerIncText = timerIncrementText[i]; //increment selection
     if (i != displayRefreshTracker) {
       clearStripLEDs();
       tm.setLED(i+1, 1);
@@ -30,33 +29,33 @@ void fstopSelector()//f-stop and time setting function, single click button 1
   switch(tmButtons)
     {
       case PLUS_BUTTON:
-        buttonPlueMinusVal += increment;
+        buttonPlusMinusValue += increment;
       break;
       case MINUS_BUTTON:
-        buttonPlueMinusVal-= increment;
+        buttonPlusMinusValue-= increment;
       break;
     }
-  if (buttonPlueMinusVal <= 0) buttonPlueMinusVal = 0;
-  if (buttonPlueMinusVal > 1000) buttonPlueMinusVal = 1000;//f-stop upper limit of 10.00 corresponding to ca. 17.07min
+  if (buttonPlusMinusValue <= 0) buttonPlusMinusValue = 0;
+  if (buttonPlusMinusValue > 1000) buttonPlusMinusValue = 1000;//f-stop upper limit of 10.00 corresponding to ca. 17.07min
   
   if (loadDefault)
   {
     FStop = (int)EEPROM.read(eeLastFStopValue) | ((int)EEPROM.read(eeLastFStopValue + 1) << 8);      
-    Serial.println(FStop);
     loadDefault=false;
-    buttonPlueMinusVal=FStop;
+    if (FStop==0) FStop=10;
+    buttonPlusMinusValue=FStop;
   }
   else
   {
-    FStop = buttonPlueMinusVal % 1001;//Fstop value
+    FStop = buttonPlusMinusValue % 1001;//Fstop value
   }
   if (increment == 33){ // 1/3rd correction to avoid bad rounding of 3 * 1/3rd = 0.99
-    steps = buttonPlueMinusVal / increment;//count how many steps of 33
+    steps = buttonPlusMinusValue / increment;//count how many steps of 33
     int multipliedVal = steps * increment; //F-stop value before correction
     if (steps % 3 == 0 && steps > 0) FStop = multipliedVal + (steps / 3);//full f-stops correction
     if (steps % 3 != 0 && steps <= 29) FStop = multipliedVal + ((steps - steps % 3 ) / 3); //fractions f-stops correction, up to 9.90
-    if (steps > 29) buttonPlueMinusVal = 1000; //F-stop max 10.00
-    if (steps <= 0) buttonPlueMinusVal = 0; //F-stop  min 0.00x
+    if (steps > 29) buttonPlusMinusValue = 1000; //F-stop max 10.00
+    if (steps <= 0) buttonPlusMinusValue = 0; //F-stop  min 0.00x
   }
   tensSeconds = fstop2TensSeconds(FStop + deltaFStop); //final tens calculation including scaling factor and lighting delay
   tensDisplay = tensSeconds; //time value for display
@@ -74,7 +73,7 @@ void fstopSelector()//f-stop and time setting function, single click button 1
     resumeTime = 0; //canceled, no time to resume
     displayRefreshTracker += 1;
   }
-  if (buttonPlueMinusVal != displayRefreshTracker) //check for display refresh
+  if (buttonPlusMinusValue != displayRefreshTracker) //check for display refresh
   {
     if (deltaFStop == 0) //condition if no scale correction
     { 
@@ -106,5 +105,5 @@ void fstopSelector()//f-stop and time setting function, single click button 1
     EEPROM.write(eeLastFStopValue, FStop & 0xFF); 
     EEPROM.write(eeLastFStopValue + 1, (FStop >> 8) & 0xFF); // 16 bit
   }
-  displayRefreshTracker = buttonPlueMinusVal; //value for display update check
+  displayRefreshTracker = buttonPlusMinusValue; //value for display update check
 }
