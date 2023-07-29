@@ -69,9 +69,9 @@ void stripValueTest(float t, int mode, int values[],int stops[], int exposeValue
             stops[n]=full[n];
             exposeValues[n]=t;
          }
-       break;
-       exposeValues[0]=t; // Base time
+       break;    
   }
+  exposeValues[0]=t; // Base time
 }
 
 void stripTest()//select strip number for stripBuilder(), simple click button 2
