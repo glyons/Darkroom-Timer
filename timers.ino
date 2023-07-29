@@ -46,9 +46,15 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
     }
     else
     {
-      if (FStop < 1000) sprintf(tempString, " %03d%4d", FStop, timeCounter ); //fstop format rule 
-      if (FStop >= 1000) sprintf(tempString, "%4d%4d", FStop,  timeCounter); //fstop format rule
-      displayText(tempString,1,6);
+      if (FStop < 1000) {
+        sprintf(tempString, " %03d%4d", FStop, timeCounter ); //fstop format rule 
+        displayText(tempString,1,6);
+      }
+      if (FStop >= 1000) {
+        sprintf(tempString, "%4d%4d", FStop,  timeCounter); //fstop format rule
+        displayText(tempString,1,99);
+      }
+      
     }
   
     yield(); // ESP32 
