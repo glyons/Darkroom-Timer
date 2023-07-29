@@ -10,7 +10,7 @@ void stripValueTest(float t, int mode, int values[],int stops[], int exposeValue
   values[0]=t;
   switch (mode)
   {
-     case 0:///Sixths strip test calculation
+     case 0:///Twelveths strip test calculation
        values[1]=values[0]+t/12;
        values[2]=values[1]+t/12;
        values[3]=values[2]+t/12;
@@ -18,7 +18,7 @@ void stripValueTest(float t, int mode, int values[],int stops[], int exposeValue
        values[5]=values[4]+t/12;
        for(int n=0;n<=5;n++)
        {
-        stops[n]=thirds[n];
+        stops[n]=twelveths[n];
         exposeValues[n]=t/12;
        }
        break;
@@ -30,7 +30,7 @@ void stripValueTest(float t, int mode, int values[],int stops[], int exposeValue
        values[5]=values[4]+t/6;
        for(int n=0;n<=5;n++)
        {
-        stops[n]=thirds[n];
+        stops[n]=sixths[n];
         exposeValues[n]=t/6;
        }
        break;
@@ -79,7 +79,8 @@ void stripTest()//select strip number for stripBuilder(), simple click button 2
   clearStripLEDs();
   int values[6]; int fstops[6]; int exposeValues[6];
   stripValueTest(tensSeconds,stepIdx, values, fstops,exposeValues);   
-  stripTestMode=true;     
+  stripTestMode=true;
+  int d=6;     
   for(int n=0;n<=5;n++)
   {
     tm.setLED(n+1,1);
@@ -91,18 +92,28 @@ void stripTest()//select strip number for stripBuilder(), simple click button 2
     }
     else
     {
-       sprintf(tempString,  " %03d%4d",fstops[n], values[n]);
-       displayText(tempString,1,6);
-       baseExposure=false;
+      if (values[n] < 10000) d=6;
+      if (values[n] >= 10000) d=99;
+      sprintf(tempString,  " %03d%4d",fstops[n], values[n]);
+      displayText(tempString,1,d);
+      baseExposure=false;
     }
     
     if (!focusLight)
     {
       FStop=fstops[n];
       timerCountdown(exposeValues[n]);//timer with f-stop converted in time + enlargment correction time
-      if (FStop < 1000) sprintf(tempString, " %03d End", FStop); //fstop format rule 
-      if (FStop >= 1000) sprintf(tempString, "%4d End", FStop); //fstop format rule
-      displayText(tempString,1,99);
+      if (FStop < 1000) 
+      {
+        sprintf(tempString, " %03d End", FStop); //fstop format rule 
+        displayText(tempString,1,99);
+      }
+      if (FStop >= 1000) 
+      {
+        sprintf(tempString, "%4d End", FStop); //fstop format rule
+        displayText(tempString,99,99);
+      }
+      
     }
     displayRefreshTracker += 1;
     if (!stripTestMode) break;
