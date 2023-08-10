@@ -1,64 +1,66 @@
-void focusOnOff() //Focus light on and off
+
+void focusOnOff()
 {
-  //tm.reset();
+  // Toggle relay pin state
   digitalWrite(RELAY_PIN, !digitalRead(RELAY_PIN));
-  if (focusLight)
-  {
-   tm.setLED(FOCUS_LED_PIN,0);
-   focusLight=false;
-  }
-  else
-  {
-   tm.setLED(FOCUS_LED_PIN,1);
-   focusLight=true;
-  }
-   delay(2*debounce); 
-  
-  
-  uiMode = 0; //back to timer mode
+
+  // Toggle focus light and corresponding LED
+  focusLight = !focusLight;
+  tm.setLED(FOCUS_LED_PIN, focusLight ? 1 : 0);
+
+  delay(2*debounce);
+  uiMode = 0; // Switch back to timer mode
 }
+
 void resetFocus()
-{ 
- if (digitalRead(RELAY_PIN == HIGH))
+{
+  // If RELAY_PIN is HIGH, reset it to LOW and turn off focus light
+  if (digitalRead(RELAY_PIN) == HIGH)
   {
     digitalWrite(RELAY_PIN, LOW);
     tm.setLED(FOCUS_LED_PIN, 0);
-    focusLight=false;
+    focusLight = false;
   }
 }
-void bipLow()//low tone bip
-{tone(TONE_PIN,toneLow,bip);}
-void bipHigh()//high tone bip
-{tone(TONE_PIN,toneHigh,bip);}
-void endTone()//bip bip end acoustic signal
+
+void bipLow() { tone(TONE_PIN, toneLow, bip); } // Low tone bip
+void bipHigh() { tone(TONE_PIN, toneHigh, bip); } // High tone bip
+
+void endTone() // End acoustic signal
 {
   bipHigh();
   delay(shortPause);
   bipHigh();
 }
-void errorTone()//bip bip bip error acoustic signal
+
+void errorTone() // Error acoustic signal
 {
-  bipLow();
-  delay(shortPause);
-  bipLow();
-  delay(shortPause);
-  bipLow();
+  for(int i = 0; i < 3; i++)
+  {
+    bipLow();
+    delay(shortPause);
+  }
 }
 
 void brightnessInit()
 {
-    byte n = EEPROM.read(eeBrightness);//displays brightness
-    tm.brightness(n);
+    // Set display brightness from EEPROM
+    tm.brightness(EEPROM.read(eeBrightness));
 }
-void brightnessSelector()//uiMode 6, long hold focus button
+
+void brightnessSelector() // uiMode 6, long hold focus button
 {
-  if (tmButtons==BRIGHTNESS_BUTTON) plusminus++;
-  brightnessValue =  plusminus % 8;
-  if(brightnessValue != displayRefreshTracker) //check for display update
-  { 
-    tm.brightness(brightnessValue); //set displays brightness function
-    EEPROM.write(eeBrightness, brightnessValue);
+  if (tmButtons == BRIGHTNESS_BUTTON)
+  {
+    // Cycle through brightness levels
+    brightnessValue =  ++plusminus % 8;
+
+    // If brightness value has changed, update display and EEPROM
+    if(brightnessValue != displayRefreshTracker)
+    {
+      tm.brightness(brightnessValue);
+      displayRefreshTracker = brightnessValue;
+    }
+    delay(intervalButton);
   }
-  displayRefreshTracker = brightnessValue; //update of display update trigger
-  delay(intervalButton);  
 }
