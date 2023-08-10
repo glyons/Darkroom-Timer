@@ -90,9 +90,13 @@ void setup()
   Serialinit();
   tm.displayBegin();
 //EEPROM
+  #if defined(ESP8266) 
+  EEPROM.begin(6);// Allocate The Memory Size Needed
+  #endif
   timerInc = EEPROM.read(eeIncrement);//f-stop buttonPlueMinus increment
   stepIdx = EEPROM.read(eeStepIdx);
-  if (stepIdx==0) stepIdx++;
+  if (stepIdx==0) stepIdx=3;
+  if (timerInc==0) timerInc=timerIncrement[2];
   tm.setLED(stepIdx, 1);
   brightnessValue = EEPROM.read(eeBrightness);
 //Values
