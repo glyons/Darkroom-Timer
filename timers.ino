@@ -41,20 +41,13 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
     timeCounter--; //set elapsed tens
     if (baseExposure)
     {
-      sprintf(tempString, "BASE%4d",timeCounter ); //fstop format rule 
-      displayText(tempString,99,6);
+    sprintf(tempString, "BASE%4d",timeCounter ); //fstop format rule
+    displayText(tempString,99,6);
     }
     else
     {
-      if (FStop < 1000) {
-        sprintf(tempString, " %03d%4d", FStop, timeCounter ); //fstop format rule 
-        displayText(tempString,1,6);
-      }
-      if (FStop >= 1000) {
-        sprintf(tempString, "%4d%4d", FStop,  timeCounter); //fstop format rule
-        displayText(tempString,1,99);
-      }
-      
+    sprintf(tempString, (FStop < 1000) ? " %03d%4d" : "%4d%4d", FStop, timeCounter); //fstop format rule
+    displayText(tempString,1,(FStop < 1000) ? 6 : 99);
     }
   
     yield(); // ESP32 
@@ -62,4 +55,36 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
   digitalWrite(RELAY_PIN, LOW);//enlarger light OFF
   tm.setLED(START_LED_PIN, 0);//Start button led OFF 
   tm.brightness(brightnessValue);
+  
+  // --- Update stored settings, after running the timer to reduce writes to the EEPROM, there are limited write to the flash 10k-100k
+  if (EEPROM.read(eeIncrement)!=timerInc) { 
+      EEPROM.write(eeIncrement, timerInc);
+    #if defined(ESP8266) 
+    EEPROM.commit();
+    #endif
+  }
+  if (EEPROM.read(eeStepIdx)!=stepIdx+1) {
+    EEPROM.write(eeStepIdx, stepIdx+1);
+    #if defined(ESP8266) 
+    EEPROM.commit();
+    #endif
+  }
+  if (EEPROM.read(eeBrightness) != brightnessValue) {
+    EEPROM.write(eeBrightness, brightnessValue);
+    #if defined(ESP8266) 
+    EEPROM.commit();
+    #endif
+  }
+  if (eeLastFStopValue!= FStop & 0xFF ){
+    EEPROM.write(eeLastFStopValue, FStop & 0xFF);
+    #if defined(ESP8266) 
+    EEPROM.commit();
+    #endif
+  }
+  if ((eeLastFStopValue + 1) !=  (FStop >> 8) & 0xFF){
+    EEPROM.write(eeLastFStopValue + 1, (FStop >> 8) & 0xFF); // 16 bit
+    #if defined(ESP8266) 
+    EEPROM.commit();
+    #endif
+  }
 }
