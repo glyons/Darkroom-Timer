@@ -27,9 +27,17 @@ void fstopSelector()//f-stop and time setting function, single click button 1
   int steps; //steps counter
   int tensDisplay; //time value for display
   increment = timerInc; //pre-set increment value
-
-  buttonPlusMinusValue += (tmButtons == PLUS_BUTTON) ? increment : ((tmButtons == MINUS_BUTTON) ? -increment : 0);
-
+  switch(tmButtons)
+  {
+    case PLUS_BUTTON:
+      if ((buttonPlusMinusValue+increment)<999)
+        buttonPlusMinusValue += increment;
+    break;
+    case MINUS_BUTTON:
+      if (( buttonPlusMinusValue-increment)>0)
+      buttonPlusMinusValue-= increment;
+    break;
+  }
   buttonPlusMinusValue = constrain(buttonPlusMinusValue, 0, 1000); //f-stop upper limit of 10.00 corresponding to ca. 17.07min
 
   if (loadDefault)
