@@ -21,7 +21,7 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
     elapsedMillis = rawMillis - startMillis; //track elapsed time
     currentMillis = rawMillis - elapsedMillis % 10; //substract time deviation from current timestamp
 
-    if (x % 10 == 0) bipHigh(); //tone every second
+    if (x % 10 == 0 && !stripTestMode) bipHigh(); //tone every second
     tmButtons = buttonsRead(); //check buttons events
 
     if(tmButtons==128 ) //stop to resume
@@ -81,7 +81,7 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
     EEPROM.commit();
     #endif
   }
-  if ((eeLastFStopValue + 1) !=  (FStop >> 8) & 0xFF){
+  if (!stripTestMode || (eeLastFStopValue + 1) !=  (FStop >> 8) & 0xFF){
     EEPROM.write(eeLastFStopValue + 1, (FStop >> 8) & 0xFF); // 16 bit
     #if defined(ESP8266) 
     EEPROM.commit();
