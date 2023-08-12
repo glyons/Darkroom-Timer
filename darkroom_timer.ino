@@ -12,18 +12,20 @@
   #define  STROBE_TM 10
   #define  CLOCK_TM 9
   #define  DIO_TM 11
+  #define TONE_PIN 12 //buzzer pin
 #elif defined(ESP8266)
 // ESP8266 specific code here
   #define  STROBE_TM 14
   #define  CLOCK_TM 13
-  #define  DIO_TM 12 
+  #define  DIO_TM 12
+  #define TONE_PIN 15 //buzzer pin
 #endif
 
 bool high_freq = false; //default false Arduino Uno,, If using a high freq CPU > ~100 MHZ set to true, i.e ESP32
 bool focusLight=false;
 bool stripTestMode=false;
 bool baseExposure=false;
-#define TONE_PIN 16 //buzzer pin
+
 #define RELAY_PIN 5 //relay board pin
 #define FOCUS_LED_PIN 0 //Focus button led pin
 #define START_LED_PIN 7 //Start button led pin
