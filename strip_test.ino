@@ -85,7 +85,7 @@ void stripTest()//select strip number for stripBuilder(), simple click button 2
         sprintf(tempString, "%4d End", FStop); //fstop format rule
         displayText(tempString,99,99);
       }
-      
+      bipHigh();
     }
     displayRefreshTracker += 1;
     if (!stripTestMode) break;
