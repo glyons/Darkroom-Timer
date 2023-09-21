@@ -1,0 +1,35 @@
+body {
+  font-family: system-ui;
+  font-size:1.2em;
+
+}
+input
+{
+ font-size:1.3em; padding:.5em; 
+ 
+}
+table{
+	border-collapse: collapse;
+	margin: 40px;
+}
+
+th,td{
+ border:1px solid #000; 
+  padding:10px;
+  width:100px;
+  text-align:center;
+}
+#parent
+{
+  width:50%;
+  margin: 0 auto;
+}
+#inp
+{
+  float:left;
+  
+}
+#output
+{
+  float:right;
+}
