@@ -1,0 +1,188 @@
+<html>
+<head>
+<style>
+body {
+  font-family: system-ui;
+  font-size:1.2em;
+
+}
+input
+{
+ font-size:1.3em; padding:.5em; 
+ 
+}
+table{
+	border-collapse: collapse;
+	margin: 40px;
+}
+
+th,td{
+ border:1px solid #000; 
+  padding:10px;
+  width:100px;
+  text-align:center;
+}
+#parent
+{
+  width:50%;
+  margin: 0 auto;
+}
+#inp
+{
+  float:left;
+  
+}
+#output
+{
+  float:right;
+}
+</style>
+</head>
+<body>
+<div id="parent">
+  <h1>Strip Test Generator</h1>
+  <div id="inp">
+    <div>
+      <label for="base">Enter Base Exposure</label>:
+      <input type="input" name="base" id="base" size="2" value="8"> seconds
+    </div>
+    <p>Select step size:</p>
+    <div>
+      <input type="radio" name="mode" value="0" id="twelveths">
+      <label for="twelveths">Twelveths</label>
+    </div>
+    <div>
+      <input type="radio" name="mode" value="1" id="sixths">
+      <label for="sixths">Sixths</label>
+    </div>
+    <div>
+      <input type="radio" name="mode" value="2" id="thirds">
+      <label for="thirds">Thirds</label>
+    </div>
+    <div>
+      <input type="radio" name="mode" value="3" id="halves">
+      <label for="halves">Halves</label>
+    </div>
+    <div>
+      <input type="radio" name="mode" value="4" id="full" checked>
+      <label for="full">Full</label>
+    </div>
+
+
+  </div>
+  <div id="output"></div>
+</div>
+<script>
+  const b = document.querySelector('#base');
+  const radioButtons = document.querySelectorAll('input[name="mode"]');
+
+  b.addEventListener("input", () => {
+    updateTable();
+  });
+  if (document.querySelector('input[name="mode"]')) {
+    document.querySelectorAll('input[name="mode"]').forEach((elem) => {
+      elem.addEventListener("change", function(event) {
+        updateTable();
+      });
+    });
+  }
+  
+  let values=[0,0,0,0,0,0];
+let stops=[0,0,0,0,0,0];
+let selectedArray=[0,0,0,0,0,0];
+let exposeValues=[0,0,0,0,0,0];
+
+function stripValueTest(t, mode) {
+  const baseTime = t
+  var full = [0, 100, 200, 300, 400, 500];
+  var halves = [0, 50, 100, 150, 200, 250];
+  var thirds = [0, 33, 66, 100, 133, 166];
+  var sixths = [0, 16, 33, 50, 66, 83];
+  var twelveths = [0, 8, 16, 25, 33, 42];
+
+  var fraction;
+  var increment=0;
+  values[0] = t;
+  switch (mode) {
+    case 0:
+      selectedArray = twelveths;
+      fraction = 1/12;
+      break;
+    case 1:
+      selectedArray = sixths;
+      fraction = 1/6;
+      break;
+    case 2:
+      selectedArray = thirds;
+      fraction = 1/3;
+      break;
+    case 3:
+      selectedArray = halves;
+      fraction = 1/2;
+      break;
+    case 4:
+      selectedArray = full;
+      fraction = 1;
+      break;
+  }
+  for (var n = 0; n <= 5; n++) {
+    values[n] = t.toFixed(2);
+    stops[n] = selectedArray[n];
+    exposeValues[n] = increment.toFixed(2);
+    increment = t*(2**(fraction)) - t;
+    t = t*(2**(fraction));
+  }
+  exposeValues[0] = baseTime;
+return[values, stops, exposeValues];
+}
+
+
+function updateTable()
+      {
+         const radioButtons = document.querySelectorAll('input[name="mode"]');
+        let selectedMode;
+            for (const radioButton of radioButtons) {
+                if (radioButton.checked) {
+                    selectedMode = radioButton.value;
+                    break;
+                }
+            }
+          let baseExposure=base.value;
+          const [values, stops, exposeValues] = stripValueTest(parseInt(baseExposure), parseInt(selectedMode));
+          // show the output:
+          output.innerText = ``;
+          // Table
+           var table= document.createElement('table'),
+            thead = document.createElement('thead'),
+            tbody = document.createElement('tbody'),
+            th,
+            tr,
+            td;
+          table.appendChild(thead); 
+         for(var i=0;i<stops.length;i++){
+            th = document.createElement('th'),          
+            th.innerHTML=parseInt(stops[i])/100;
+            table.appendChild(th);
+		}
+		   tr = document.createElement('tr')   
+         for(var i=0;i<stops.length;i++){
+            td = document.createElement('td'),          
+            td.innerHTML=values[i];
+            tr.appendChild(td);
+		}
+			tbody.appendChild(tr);
+				   tr = document.createElement('tr')   
+         for(var i=0;i<stops.length;i++){
+            td = document.createElement('td'),          
+            td.innerHTML=exposeValues[i];;
+            tr.appendChild(td);
+		}
+			tbody.appendChild(tr);
+            table.appendChild(tbody);
+            document.body.appendChild(table);
+           output.appendChild(table);
+          
+      }
+</script>
+</body>
+</html>
