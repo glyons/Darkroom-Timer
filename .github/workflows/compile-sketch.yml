@@ -18,5 +18,3 @@ jobs:
             - darkroom_timer
           libraries: |
              TM1638plus
-             Arduino_Math
-             Arduino_EEPROM
