@@ -6,13 +6,18 @@ on:
 jobs:
   compile-sketches:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        fqbn:
+          - arduino:avr:uno
+          - esp32:esp32:esp32
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
         with: 
-          fqbn: "arduino:avr:uno"
+          fqbn: ${{matrix.fqbn}}
           sketch-paths: |
             # Configure the action to search all folders under the root of the repository for sketches and compile them.
             # This is formatted as a YAML list, which makes it possible to have multiple sketch paths if needed.
