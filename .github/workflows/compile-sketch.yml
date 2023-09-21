@@ -18,3 +18,5 @@ jobs:
             - darkroom_timer
           libraries: |
              TM1638plus
+             Math
+             EEPROM
