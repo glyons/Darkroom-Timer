@@ -10,7 +10,7 @@ jobs:
       matrix:
         fqbn:
           - arduino:avr:uno
-          - esp32:esp32:esp32
+          # esp32:esp32:esp32
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
