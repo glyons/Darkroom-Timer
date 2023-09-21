@@ -18,4 +18,4 @@ jobs:
             # This is formatted as a YAML list, which makes it possible to have multiple sketch paths if needed.
             - darkroom_timer
           libraries: |
-            - 
+            - Arduino_TM1638plus
