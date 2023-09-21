@@ -7,6 +7,13 @@ jobs:
   compile-sketches:
     runs-on: ubuntu-latest
     steps:
+       - name: Checkout custom library
+        uses: actions/checkout@v3
+        with:
+          repository: gavinlyonsrepo/TM1638plus
+          ref: master
+          path: CustomLibrary # must contain string "Custom"
+          # No need to put "Custom" library in the required-libraries list
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Compile sketches
