@@ -7,7 +7,7 @@ jobs:
   compile-sketches:
     runs-on: ubuntu-latest
     steps:
-       - name: Checkout custom library
+      - name: Checkout custom library
         uses: actions/checkout@v3
         with:
           repository: gavinlyonsrepo/TM1638plus
@@ -18,13 +18,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Compile sketches
         uses: arduino/compile-sketches@v1
-        with:
-          fqbn: esp8266:esp8266:espino         
+        with:       
           sketch-paths: |
             # Configure the action to search all folders under the root of the repository for sketches and compile them.
             # This is formatted as a YAML list, which makes it possible to have multiple sketch paths if needed.
             - darkroom_timer
           libraries: |
-            - Arduino_TM1638plus
             - Arduino_Math
             - Arduino_EEPROM
