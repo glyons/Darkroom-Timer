@@ -2,7 +2,7 @@
 // Rewritten for the TM1638 without rotary encoder by Gavin Lyons.
 // Based on Monkito darkroom f-stop timer software written and © by Elia Cottier//
 #include <TM1638plus.h>
-#include <Math.h> //Math library for "round" function
+#include <math.h> //Math library for "round" function
 #include <EEPROM.h> //EEPROM library to save set-up values
 
 // GPIO I/O pins on the Arduino or ESP 12 Relay
