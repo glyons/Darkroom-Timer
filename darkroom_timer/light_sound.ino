@@ -12,29 +12,34 @@ void focusOnOff()
   uiMode = 0; // Switch back to timer mode
 }
 
-// Handler for uiMode 4: manage focus toggle and a stopwatch that displays while focus is ON
+// Handler for uiMode 4: manage focus toggle and beep every second while light is ON
 void focusModeLoop()
 {
-  // Toggle focus / stopwatch when user presses the Focus button
+  static unsigned long lastBeepMillis = 0; // track last beep time
+  
+  // Toggle focus when user presses the Focus button
   if (tmButtons == FOCUS_BUTTON)
   {
     if (!focusLight)
     {
-      // Turn focus light ON and start stopwatch at 0.0
+      // Turn focus light ON
       digitalWrite(RELAY_PIN, HIGH);
       focusLight = true;
       tm.setLED(FOCUS_LED_PIN, 1);
       stopwatchActive = true;
       stopwatchStartMillis = millis();
+      lastBeepMillis = millis();
+      bipHigh(); // Beep immediately on activation
     }
     else
     {
-      // Turn focus light OFF, stop and reset stopwatch, return to normal UI
+      // Turn focus light OFF and return to normal UI
       digitalWrite(RELAY_PIN, LOW);
       focusLight = false;
       tm.setLED(FOCUS_LED_PIN, 0);
       stopwatchActive = false;
       stopwatchStartMillis = 0;
+      lastBeepMillis = 0;
       uiMode = 0; // return to default UI
     }
     delay(2*debounce);
@@ -50,6 +55,13 @@ void focusModeLoop()
     // Align tenths into the right-most 4 digits, decimal point at position 6 (same as timers)
     sprintf(tempString, "    %4d", tenths);
     displayText(tempString, 99, 6);
+    
+    // Beep every second (every 1000 ms), just like timer mode
+    if (now - lastBeepMillis >= 1000)
+    {
+      bipHigh();
+      lastBeepMillis = now;
+    }
   }
 }
 

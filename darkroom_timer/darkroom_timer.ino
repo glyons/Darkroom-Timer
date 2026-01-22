@@ -55,8 +55,8 @@ unsigned long stopwatchStartMillis = 0;
 
   byte brightnessValue; 
   uint8_t tmButtons;
-  const long intervalButton = 200; // interval to read button (milliseconds). Reduced from 300 to improve responsiveness
-  byte debounce(10); //general debounce delay, ok for buttons and encoder
+  const long intervalButton = 300; // interval to read button (milliseconds). Reduced from 300 to improve responsiveness
+  byte debounce(5); //general debounce delay, ok for buttons and encoder
   byte uiMode; //mode for main loop mode management
   int displayRefreshTracker; //track encoder change used by all selection functions
   byte bip(100); //bip duration
