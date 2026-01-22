@@ -117,19 +117,4 @@ void brightnessInit()
     tm.brightness(EEPROM.read(eeBrightness));
 }
 
-void brightnessSelector() // uiMode 6, long hold focus button
-{
-  if (tmButtons == BRIGHTNESS_BUTTON)
-  {
-    // Cycle through brightness levels
-    brightnessValue =  ++plusminus % 8;
-
-    // If brightness value has changed, update display and EEPROM
-    if(brightnessValue != displayRefreshTracker)
-    {
-      tm.brightness(brightnessValue);
-      displayRefreshTracker = brightnessValue;
-    }
-    delay(intervalButton);
-  }
-}
+// BrightnessSelector removed — BRIGHTNESS_BUTTON now toggles base exposure mode.

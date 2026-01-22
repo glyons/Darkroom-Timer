@@ -25,6 +25,7 @@ bool high_freq = false; //default false Arduino Uno,, If using a high freq CPU >
 bool focusLight=false;
 bool stripTestMode=false;
 bool baseExposure=false;
+int baseFStop = 0; // stored base exposure f-stop (hundredths)
 // Stopwatch for focus mode
 bool stopwatchActive = false;
 unsigned long stopwatchStartMillis = 0;
@@ -159,8 +160,15 @@ void uiModes() //timer mode and related functions
          uiMode = 2; //Strip Test Mode
       break;
       case BRIGHTNESS_BUTTON:
-        uiMode = 99; //Brightness set-up
-        break;
+        // Toggle base exposure mode (replaces previous brightness functionality)
+        baseExposure = !baseExposure;
+        if (baseExposure) {
+          baseFStop = FStop; // store current f-stop as base (not saved to EEPROM)
+        } else {
+          baseFStop = 0;
+        }
+        displayRefreshTracker = -9999; // force display refresh
+      break;
       case INCREMENT_BUTTON://F-stop increment set-up
         uiMode = 14; 
       break;
@@ -210,9 +218,7 @@ void uiModes() //timer mode and related functions
     case 19:
       clearCorrection();
     break;
-    case 99:
-      brightnessSelector();
-    break;
+    // case 99 removed: BRIGHTNESS_BUTTON repurposed to toggle base exposure
     default:
      fstopSelector(); //default mode
     } 

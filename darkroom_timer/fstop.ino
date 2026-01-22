@@ -82,8 +82,23 @@ void fstopSelector()//f-stop and time setting function, single click button 1
   if (buttonPlusMinusValue != displayRefreshTracker) //check for display refresh
   {
     if (resumeTime != 0) tensDisplay = resumeTime; //display resume time
-    sprintf(tempString, " %03d%4d", FStop, tensDisplay);
-    displayText(tempString,1,6);
+    if (baseExposure) {
+      // Show relative f-stop difference from base with 2 decimals (range -9.99..+9.99)
+      int diffHundredths = FStop - baseFStop; // difference in hundredths
+      diffHundredths = constrain(diffHundredths, -999, 999);
+      int absVal = abs(diffHundredths);
+      char sign = (diffHundredths < 0) ? '-' : ' ';
+      char left[5];
+      // left is 4 chars: sign + three digits (hundredths), decimal shown at position 1 -> sign D.DD
+      sprintf(left, "%c%03d", sign, absVal);
+      sprintf(tempString, "%s%4d", left, tensDisplay);
+      // decimal point for f-stop should be after the first character (position 1)
+      displayText(tempString,1,6);
+    } else {
+      // No base exposure: hide f-stop display (leave blank)
+      sprintf(tempString, "    %4d", tensDisplay);
+      displayText(tempString,99,6);
+    }
   }
   displayRefreshTracker = buttonPlusMinusValue; //value for display update check
 }
