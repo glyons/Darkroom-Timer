@@ -34,6 +34,10 @@ unsigned long stopwatchStartMillis = 0;
 #define START_LED_PIN 7 //Start button led pin
 #define CORR_LED_PIN 6 //Start button led pin
 
+//Default brightness (optional override), uncomment and set to override EEPROM brightness value on startup
+// Valid range: 0-7 (0=dimmest, 7=brightest)
+ #define DEFAULT_BRIGHTNESS 0
+
 //TM1638 Buttons
 #define BRIGHTNESS_BUTTON 8 
 #define STRIPTEST_BUTTON 4
@@ -106,7 +110,11 @@ void setup()
   if (stepIdx==0) stepIdx=3;
   if (timerInc==0) timerInc=timerIncrement[2];
   tm.setLED(stepIdx, 1);
-  brightnessValue = EEPROM.read(eeBrightness);
+  #ifdef DEFAULT_BRIGHTNESS
+    brightnessValue = DEFAULT_BRIGHTNESS;
+  #else
+    brightnessValue = EEPROM.read(eeBrightness);
+  #endif
 //Values
   FStop = 0;
   deltaFStop = 0;
