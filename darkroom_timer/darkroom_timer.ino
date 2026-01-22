@@ -25,6 +25,9 @@ bool high_freq = false; //default false Arduino Uno,, If using a high freq CPU >
 bool focusLight=false;
 bool stripTestMode=false;
 bool baseExposure=false;
+// Stopwatch for focus mode
+bool stopwatchActive = false;
+unsigned long stopwatchStartMillis = 0;
 
 #define RELAY_PIN 5 //relay board pin
 #define FOCUS_LED_PIN 0 //Focus button led pin
@@ -41,6 +44,8 @@ bool baseExposure=false;
 #define PLUS_BUTTON 64
 #define SHIFT_MINUS_BUTTON 33
 #define SHIFT_PLUS_BUTTON 65
+// Focus button (raw TM1638 button mask used elsewhere in the sketch)
+#define FOCUS_BUTTON 0x02
 
 //EPROM default valuse storage
   const byte eeBrightness = 0; //eeprom brightness value address
@@ -163,7 +168,7 @@ void uiModes() //timer mode and related functions
   }
   else
   {
-    if(millis()-time_passed > 5000) {
+    if(millis()-time_passed > 5000 && !stopwatchActive) {
       time_passed = millis(); 
       uiMode=0;
     }
@@ -182,7 +187,7 @@ void uiModes() //timer mode and related functions
       uiMode = 22;
     break;
     case 4:
-      focusOnOff(); // Focus Lamp on/off
+      focusModeLoop(); // Focus Lamp on/off and stopwatch handler
     break;
     case 12:
       focusOnOff();
