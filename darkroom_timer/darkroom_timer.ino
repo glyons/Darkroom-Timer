@@ -47,7 +47,7 @@ unsigned long stopwatchStartMillis = 0;
 // Focus button (raw TM1638 button mask used elsewhere in the sketch)
 #define FOCUS_BUTTON 0x02
 
-//EPROM default valuse storage
+//EPROM default values storage
   const byte eeBrightness = 0; //eeprom brightness value address
   const byte eeIncrement = 1; //eeprom f-stop selector increment value address
   const byte eeLastFStopValue = 3; //eeprom step program input mode value address
@@ -59,7 +59,7 @@ unsigned long stopwatchStartMillis = 0;
   byte debounce(5); //general debounce delay, ok for buttons and encoder
   byte uiMode; //mode for main loop mode management
   int displayRefreshTracker; //track encoder change used by all selection functions
-  byte bip(100); //bip duration
+  byte bip(50); //bip duration
   int shortTone (500); //short tone duration
   int longTone (1000); //long tone duration
   int toneLow(880); //lower frequency tone (A 4th)
@@ -67,6 +67,7 @@ unsigned long stopwatchStartMillis = 0;
   byte shortPause(150); //short tone pause
   int readingDelay = 1000;//1 sec. human reading delay
   char tempString[9]; //TM1638 Display digits with two decimals.
+  int stripTestInterval (2000); //how long you have to move the cover between each test strip exposure (ms)
 
   volatile unsigned int buttonPlusMinusValue; //+/- exposure functions
   int increment; 

@@ -17,6 +17,22 @@ void focusModeLoop()
 {
   static unsigned long lastBeepMillis = 0; // track last beep time
   
+  // Cancel button turns off focus light and returns to default mode
+  if (tmButtons == 1) // Cancel/SHIFT_BACK_BUTTON
+  {
+    if (focusLight)
+    {
+      digitalWrite(RELAY_PIN, LOW);
+      focusLight = false;
+      tm.setLED(FOCUS_LED_PIN, 0);
+      stopwatchActive = false;
+      stopwatchStartMillis = 0;
+      lastBeepMillis = 0;
+    }
+    uiMode = 0; // return to default UI
+    delay(2*debounce);
+  }
+  
   // Toggle focus when user presses the Focus button
   if (tmButtons == FOCUS_BUTTON)
   {

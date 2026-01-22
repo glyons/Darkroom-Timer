@@ -93,7 +93,7 @@ void stripTest()//select strip number for stripBuilder(), simple click button 2
     }
     displayRefreshTracker += 1;
     if (!stripTestMode) break;
-    delay(1000);
+    delay(stripTestInterval); //time to move the cover
   }
   stripTestMode=false;
   FStop=fstops[0];
