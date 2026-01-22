@@ -9,10 +9,10 @@
 //pick on any I/O you want.
 #if defined(__AVR__)
 // Arduino
-  #define  STROBE_TM 10
-  #define  CLOCK_TM 9
+  #define  STROBE_TM 13
+  #define  CLOCK_TM 12
   #define  DIO_TM 11
-  #define TONE_PIN 12 //buzzer pin
+  #define TONE_PIN 10 //buzzer pin
 #elif defined(ESP8266)
 // ESP8266 specific code here
   #define  STROBE_TM 14
