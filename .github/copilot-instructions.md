@@ -45,14 +45,14 @@ For ESP8266 variants change the fqbn, for example `esp8266:esp8266:generic`.
 **UI Mode reference** (current mappings in `uiMode` switch within `uiModes()`)
 | uiMode | Handler | Trigger | Purpose |
 |--------|---------|---------|---------|
-| 0 | `fstopSelector()` | Default/timeout | F-stop and time selection |
+| 0 | `fstopSelector()` | `SETBASEEXPOSURE_BUTTON` | Default/timeout | F-stop and time selection |
 | 2 | `stripTest()` | `STRIPTEST_BUTTON` | Run strip test sequence |
 | 4 | `focusModeLoop()` | `FOCUS_BUTTON` | Focus light on/off with stopwatch |
 | 12 | `focusOnOff()` | Internal | Direct focus light toggle |
 | 14 | `fstopIncrementSetUp()` | `INCREMENT_BUTTON` | Select f-stop increment (1/2, 1/3, 1/6, 1/12) |
 | 18 | `scaleCalculator()` | `SHIFT_PLUS_BUTTON` | Adjust scale/length correction factor |
 | 19 | `clearCorrection()` | `SHIFT_MINUS_BUTTON` | Reset scale correction to zero |
-| 99 | `brightnessSelector()` | `BRIGHTNESS_BUTTON` | Adjust display brightness |
+| 99 | (removed) | `BRIGHTNESS_BUTTON` | (previously brightness selector; now repurposed) |
 
 **Safe change guidelines**
 - When changing pin mappings, verify both `__AVR__` and `ESP8266` blocks (don't assume a single platform).
@@ -118,17 +118,17 @@ uiMode=0
    ↓
 uiMode=0
 
-┌─────────────────────────────────────────────┐
-│ uiMode 14 (fstopIncrementSetUp)             │
-│ uiMode 99 (brightnessSelector)              │
-│ uiMode 18 (scaleCalculator)                 │
-│ uiMode 19 (clearCorrection)                 │
-├─────────────────────────────────────────────┤
-│ Settings/adjustment modes (INCREMENT_BUTTON,│
-│ BRIGHTNESS_BUTTON, SHIFT_PLUS_BUTTON, etc) │
-│ Display selection cycling; cycle & update   │
-│ on button repeat (held) or timeout          │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│ uiMode 14 (fstopIncrementSetUp)                 │
+│ uiMode 99 (brightnessSelector)                  │
+│ uiMode 18 (scaleCalculator)                     │
+│ uiMode 19 (clearCorrection)                     │
+├─────────────────────────────────────────────────┤
+│ Settings/adjustment modes (INCREMENT_BUTTON,    │
+│ SETBASEEXPOSURE_BUTTON, SHIFT_PLUS_BUTTON, etc) │
+│ Display selection cycling; cycle & update       │
+│ on button repeat (held) or timeout              │
+└─────────────────────────────────────────────────┘
    ↓ (CANCEL_BUTTON or 5-sec timeout)
    ↓
 uiMode=0

@@ -40,7 +40,7 @@ unsigned long stopwatchStartMillis = 0;
  #define DEFAULT_BRIGHTNESS 0
 
 //TM1638 Buttons
-#define BRIGHTNESS_BUTTON 8 
+#define SETBASEEXPOSURE_BUTTON 8 //BRIGHTNESS_BUTTON 8 
 #define STRIPTEST_BUTTON 4
 #define STRIPTEST_MODE_BUTTON 5
 #define INCREMENT_BUTTON 16
@@ -159,8 +159,8 @@ void uiModes() //timer mode and related functions
       case STRIPTEST_BUTTON:
          uiMode = 2; //Strip Test Mode
       break;
-      case BRIGHTNESS_BUTTON:
-        // Toggle base exposure mode (replaces previous brightness functionality)
+      case SETBASEEXPOSURE_BUTTON:
+        // Toggle base exposure mode on/off
         baseExposure = !baseExposure;
         if (baseExposure) {
           baseFStop = FStop; // store current f-stop as base (not saved to EEPROM)

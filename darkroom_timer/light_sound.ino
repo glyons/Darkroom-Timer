@@ -117,4 +117,3 @@ void brightnessInit()
     tm.brightness(EEPROM.read(eeBrightness));
 }
 
-// BrightnessSelector removed — BRIGHTNESS_BUTTON now toggles base exposure mode.
