@@ -95,7 +95,7 @@ void setup()
   #if defined(ESP8266) 
   EEPROM.begin(6);// Allocate The Memory Size Needed
   #endif
-  timerInc = EEPROM.read(eeIncrement);//f-stop buttonPlueMinus increment
+  timerInc = EEPROM.read(eeIncrement);//f-stop buttonPlusMinus increment
   stepIdx = EEPROM.read(eeStepIdx);
   if (stepIdx==0) stepIdx=3;
   if (timerInc==0) timerInc=timerIncrement[2];
@@ -136,7 +136,7 @@ void uiModes() //timer mode and related functions
     switch(tmButtons)
     {
       case 0x16:
-        uiMode = 1; //Clear buttonPlueMinus before timer mode (uiMode 0)
+        uiMode = 1; //Clear buttonPlusMinus before timer mode (uiMode 0)
       break;
       case 0x02:
         uiMode = 4; //Focus light on/off
