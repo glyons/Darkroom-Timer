@@ -206,15 +206,19 @@ void uiModes() //timer mode and related functions
 // Display Text with decimal points
 void displayText(const char *text, int p, int p2) {
   char c, pos=0;
+  const uint8_t TM_DISPLAY_SIZE = 8;
   while ((c = (*text++)) && pos < TM_DISPLAY_SIZE)  {
     if ((p==pos ||p2==pos) && p>0) {
-      tm.displayASCIIwDot(pos++, c);
+      // Display number with decimal point
+      //tm.displayASCIIwDot(pos++, c);
+      tm.displayASCII(pos++, c, tm.DecPointOn);
     }  else {
-      tm.displayASCII(pos++, c);
+      // Display number without decimal point
+      //tm.displayASCII(pos++, c);
+      tm.displayASCII(pos++, c, tm.DecPointOff);
     }
   }
-}
-// Reset LED on the TM1638
+}// Reset LED on the TM1638
 void clearStripLEDs() {
   for (uint8_t LEDposition = 1; LEDposition < 7; LEDposition++) {
     tm.setLED(LEDposition, 0);
