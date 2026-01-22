@@ -50,7 +50,7 @@ bool baseExposure=false;
 
   byte brightnessValue; 
   uint8_t tmButtons;
-  const long intervalButton = 300; // interval to read button (milliseconds)
+  const long intervalButton = 60; // interval to read button (milliseconds). Reduced from 300 to improve responsiveness
   byte debounce(10); //general debounce delay, ok for buttons and encoder
   byte uiMode; //mode for main loop mode management
   int displayRefreshTracker; //track encoder change used by all selection functions
