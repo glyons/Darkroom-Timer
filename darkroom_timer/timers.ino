@@ -57,6 +57,8 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
   tm.brightness(brightnessValue);
   
   // --- Update stored settings, after running the timer to reduce writes to the EEPROM, there are limited write to the flash 10k-100k
+  // DISABLED: All EEPROM writes are disabled
+  /*
   if (EEPROM.read(eeIncrement)!=timerInc) { 
       EEPROM.write(eeIncrement, timerInc);
     #if defined(ESP8266) 
@@ -87,4 +89,5 @@ void timerCountdown(int timeCounter)//Main timer countdown, time in 1/10th displ
     EEPROM.commit();
     #endif
   }
+  */
 }
